@@ -79,7 +79,20 @@ var WORLD_MAP_NODES = [
 
 function removeGreenBg(img){
     var c=document.createElement('canvas'); c.width=img.naturalWidth; c.height=img.naturalHeight;
-    var cx=c.getContext('2d'); cx.filter='url(#chromakey)'; cx.drawImage(img,0,0); cx.filter='none';
+    var cx=c.getContext('2d');
+    cx.drawImage(img,0,0);
+    try{
+        var id=cx.getImageData(0,0,c.width,c.height), d=id.data;
+        for(var i=0;i<d.length;i+=4){
+            var R=d[i], G=d[i+1], B=d[i+2];
+            var a1=R+B-2*G+255; if(a1<0)a1=0; else if(a1>255)a1=255;
+            var lum=0.2126*R+0.7152*G+0.0722*B;
+            d[i+3]=(lum>5)?a1:0;
+        }
+        cx.putImageData(id,0,0);
+    }catch(e){
+        cx.filter='url(#chromakey)'; cx.drawImage(img,0,0); cx.filter='none';
+    }
     return c;
 }
 var odairSprite=new Image(); odairSprite.src='cats/odair_sprite_cleaned.png';
@@ -107,11 +120,11 @@ pitoFaraImg_raw.src='cats/pito_fara_boss.png';
 var thiaImg=null;
 var thiaImg_raw=new Image();
 thiaImg_raw.onload=function(){ thiaImg=removeGreenBg(thiaImg_raw); };
-thiaImg_raw.src='cats/thiá do espirro.png';
+thiaImg_raw.src='cats/thia_espirro.png';
 var princesaDoxImg=null;
 var princesaDoxImg_raw=new Image();
 princesaDoxImg_raw.onload=function(){ princesaDoxImg=removeGreenBg(princesaDoxImg_raw); };
-princesaDoxImg_raw.src='cats/sprite princesa dóx.png';
+princesaDoxImg_raw.src='cats/princesa_dox.png';
 
 var odairFrames=[
     {sx:6,sy:3,sw:129,sh:186},{sx:202,sy:3,sw:131,sh:185},{sx:375,sy:1,sw:148,sh:188},{sx:569,sy:3,sw:137,sh:186},
