@@ -11,9 +11,7 @@ canvas { display:block; image-rendering:pixelated; width:960px; height:540px; }
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute;visibility:hidden;"><defs>
-<filter id="chromakey" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 -2 1 0 1" in="SourceGraphic" result="greenAlpha"/><feColorMatrix type="luminanceToAlpha" in="SourceGraphic" result="lum"/><feComponentTransfer in="lum" result="blackAlpha"><feFuncA type="discrete" tableValues="0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1"/></feComponentTransfer><feComposite operator="arithmetic" k1="1" k2="0" k3="0" k4="0" in="greenAlpha" in2="blackAlpha" result="combinedAlpha"/><feComposite operator="in" in="SourceGraphic" in2="combinedAlpha"/></filter>
-</defs></svg>
+
 <video id="introVid" src="cats/abertura_plataforma.mp4" muted loop style="position:absolute;left:-9999px;"></video>
 <canvas id="game" tabindex="0" style="display:block;margin:0 auto;"></canvas>
 <script>
@@ -77,24 +75,6 @@ var WORLD_MAP_NODES = [
 ];
 
 
-function removeGreenBg(img){
-    var c=document.createElement('canvas'); c.width=img.naturalWidth; c.height=img.naturalHeight;
-    var cx=c.getContext('2d');
-    cx.drawImage(img,0,0);
-    try{
-        var id=cx.getImageData(0,0,c.width,c.height), d=id.data;
-        for(var i=0;i<d.length;i+=4){
-            var R=d[i], G=d[i+1], B=d[i+2];
-            var a1=R+B-2*G+255; if(a1<0)a1=0; else if(a1>255)a1=255;
-            var lum=0.2126*R+0.7152*G+0.0722*B;
-            d[i+3]=(lum>5)?a1:0;
-        }
-        cx.putImageData(id,0,0);
-    }catch(e){
-        cx.filter='url(#chromakey)'; cx.drawImage(img,0,0); cx.filter='none';
-    }
-    return c;
-}
 var odairSprite=new Image(); odairSprite.src='cats/odair_sprite_cleaned.png';
 var odairFace=new Image(); odairFace.src='cats/odair_face_icon.png';
 var casaImg=new Image(); casaImg.src='cats/casa_clean.png';
@@ -103,28 +83,13 @@ var esfingeImg=new Image(); esfingeImg.src='cats/esfinge_clean.png';
 var matrixImg=new Image(); matrixImg.src='cats/matrix_clean.png';
 var sachesImg=new Image(); sachesImg.src='cats/saches_clean.png';
 var hotelImg=new Image(); hotelImg.src='cats/hotel_clean.png';
-var rachelSprite=null;
-var rachelSprite_raw=new Image();
-rachelSprite_raw.onload=function(){ rachelSprite=removeGreenBg(rachelSprite_raw); };
-rachelSprite_raw.src='cats/rachel_sprite.png';
+var rachelSprite=new Image(); rachelSprite.src='cats/rachel_chroma.png';
 var espacoImg=new Image(); espacoImg.src='cats/espaco_clean.png';
-var xepaBossImg=null;
-var xepaBossImg_raw=new Image();
-xepaBossImg_raw.onload=function(){ xepaBossImg=removeGreenBg(xepaBossImg_raw); };
-xepaBossImg_raw.src='cats/xepa_sprite.png';
+var xepaBossImg=new Image(); xepaBossImg.src='cats/xepa_chroma.png';
 var xepaEnemyImg=new Image(); xepaEnemyImg.src='cats/xepa_enemy_sprite.png';
-var pitoFaraImg=null;
-var pitoFaraImg_raw=new Image();
-pitoFaraImg_raw.onload=function(){ pitoFaraImg=removeGreenBg(pitoFaraImg_raw); };
-pitoFaraImg_raw.src='cats/pito_fara_boss.png';
-var thiaImg=null;
-var thiaImg_raw=new Image();
-thiaImg_raw.onload=function(){ thiaImg=removeGreenBg(thiaImg_raw); };
-thiaImg_raw.src='cats/thia_espirro.png';
-var princesaDoxImg=null;
-var princesaDoxImg_raw=new Image();
-princesaDoxImg_raw.onload=function(){ princesaDoxImg=removeGreenBg(princesaDoxImg_raw); };
-princesaDoxImg_raw.src='cats/princesa_dox.png';
+var pitoFaraImg=new Image(); pitoFaraImg.src='cats/pito_fara_chroma.png';
+var thiaImg=new Image(); thiaImg.src='cats/thia_espirro_chroma.png';
+var princesaDoxImg=new Image(); princesaDoxImg.src='cats/princesa_dox_chroma.png';
 
 var odairFrames=[
     {sx:6,sy:3,sw:129,sh:186},{sx:202,sy:3,sw:131,sh:185},{sx:375,sy:1,sw:148,sh:188},{sx:569,sy:3,sw:137,sh:186},
